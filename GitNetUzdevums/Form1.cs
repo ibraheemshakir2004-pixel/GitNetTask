@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+using System;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace WindowsFormsApplication_15
+namespace GitNetUzdevums
 {
     public partial class Form1 : Form
     {
@@ -16,66 +10,62 @@ namespace WindowsFormsApplication_15
         {
             InitializeComponent();
         }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void BtnDraw_Click(object sender, EventArgs e)
         {
-            double m = 30; //scale
-            int xc = pictureBox1.Width / 2;   // center coordinates
-            int yc = pictureBox1.Height / 2;
-            int xe, ye;     // point "screen" coordinates
-            double x, y;   // point "math" coordinates
-            double step = 0.005;    // step
-            Graphics G = pictureBox1.CreateGraphics();
-            G.Clear(System.Drawing.Color.White);
-            Pen myPen = new Pen(Color.Silver);
-            G.DrawLine(myPen, 10, yc, 2 * xc - 10, yc);   // axes
-            G.DrawLine(myPen, xc, 10, xc, 2 * yc - 10);
-            myPen = new Pen(Color.Black);
-            x = -Math.PI;
-            // function graph design loop
-            while (x < Math.PI)
-            {
-                try   // if the function does not exist at any point 
-                {
-                    y = 1/Math.Sin(x);   // Function formula!!!
-                    xe = (int)(xc + m * x);
-                    ye = (int)(yc - m * y);
-                    G.DrawEllipse(myPen, xe, ye, 1, 1);
-                }
-                catch { }
-                x += step;
-            }
+            Graphics g = pictureBox1.CreateGraphics();
+            g.Clear(Color.White);
+
+            Pen pen = new Pen(Color.FromArgb(33, 97, 140), 3);
+            SolidBrush brush = new SolidBrush(Color.FromArgb(120, 52, 152, 219));
+
+            int cx = (pictureBox1.Width / 2) - 100;
+            int cy = (pictureBox1.Height / 2) - 100;
+
+            g.FillEllipse(brush, cx, cy, 200, 200);
+            g.DrawEllipse(pen, cx, cy, 200, 200);
+
+            Font font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            SolidBrush textBrush = new SolidBrush(Color.White);
+            g.DrawString("Anaf", font, textBrush, cx + 60, cy + 85);
+
+            pen.Dispose();
+            brush.Dispose();
+            font.Dispose();
+            textBrush.Dispose();
+            g.Dispose();
         }
-
-
-        private void button2_Click(object sender, EventArgs e)
+        private void BtnGraph_Click(object sender, EventArgs e)
         {
-            double m = 30; //scale
-            int xc = pictureBox1.Width / 2;   // center coordinates
+            double scale = 60;
+            int xc = pictureBox1.Width / 2;
             int yc = pictureBox1.Height / 2;
-            int xe, ye;     // point "screen" coordinates
-            double x, y;   // point "math" coordinates
-            double step = 0.005;    // step
-            Graphics G = pictureBox1.CreateGraphics();
-            G.Clear(System.Drawing.Color.White);
-            Pen myPen = new Pen(Color.Silver);
-            G.DrawLine(myPen, 10, yc, 2 * xc - 10, yc);   // axes
-            G.DrawLine(myPen, xc, 10, xc, 2 * yc - 10);
-            myPen = new Pen(Color.Black);
-            x = -Math.PI;
-            // function graph design loop
-            while (x < Math.PI)
+            double step = 0.005;
+            Graphics g = pictureBox1.CreateGraphics();
+            g.Clear(Color.White);
+            Pen axisPen = new Pen(Color.Gray, 1);
+            g.DrawLine(axisPen, 0, yc, pictureBox1.Width, yc);
+            g.DrawLine(axisPen, xc, 0, xc, pictureBox1.Height);
+            Font labelFont = new Font("Segoe UI", 8F);
+            g.DrawString("x", labelFont, Brushes.Gray, pictureBox1.Width - 15, yc + 5);
+            g.DrawString("y", labelFont, Brushes.Gray, xc + 5, 5);
+            Pen curvePen = new Pen(Color.FromArgb(39, 174, 96), 2);
+            double x = -Math.PI * 2;
+            while (x <= Math.PI * 2)
             {
-                try   // if the function does not exist at any point 
-                {
-                    y = x * x; // Function formula!!!
-                    xe = (int)(xc + m * x);
-                    ye = (int)(yc - m * y);
-                    G.DrawEllipse(myPen, xe, ye, 1, 1);
-                }
-                catch { }
+                double y = Math.Cos(x);
+                int xe = (int)(xc + scale * x);
+                int ye = (int)(yc - scale * y);
+                g.DrawEllipse(curvePen, xe, ye, 1, 1);
                 x += step;
             }
+            Font funcFont = new Font("Segoe UI", 10F, FontStyle.Bold);
+            g.DrawString("y = cos(x)", funcFont, new SolidBrush(Color.FromArgb(39, 174, 96)), 10, 10);
+
+            axisPen.Dispose();
+            curvePen.Dispose();
+            labelFont.Dispose();
+            funcFont.Dispose();
+            g.Dispose();
         }
     }
 }
